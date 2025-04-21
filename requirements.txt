@@ -1,0 +1,11 @@
+streamlit==1.36.0
+pandas==2.2.2
+numpy==1.26.4
+scikit-learn==1.5.0
+sentence-transformers==4.1.0
+faiss-cpu==1.8.0
+biopython==1.83
+requests==2.32.3
+pycox==0.2.3
+torchtuples==0.2.2
+python-dotenv==1.0.1
