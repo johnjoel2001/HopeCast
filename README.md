@@ -36,8 +36,11 @@
 | Genetic  | 0.5000         | 0.6513  | **0.6730** |
 | Mutation | 0.5000         | 0.5687  | **0.5611** |
 
+## Try the HopeCast app here:  
 
-##  Setup Instructions
+ [https://hopecast-service-1004867270011.us-central1.run.app/](https://hopecast-service-1004867270011.us-central1.run.app/)
+
+##  Setup Instructions to Run Locally
 
 ### 1. Clone the Repository
 
