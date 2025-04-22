@@ -9,3 +9,4 @@ requests==2.32.3
 pycox==0.2.3
 torchtuples==0.2.2
 python-dotenv==1.0.1
+xgboost

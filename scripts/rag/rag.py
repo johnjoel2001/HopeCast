@@ -14,17 +14,24 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 class RAGSystem:
-    """Retrieves PubMed articles and generates treatment advice using Grok API."""
+
+    """
+    Retrieving PubMed articles and generates treatment advice using Grok API
+    
+    """
     
     def __init__(self, max_articles: int = 50, cache_file: str = "pubmed_cache.pkl"):
+
         """
-        Initialize RAGSystem for article retrieval and explanation.
+        Initializing RAGSystem for article retrieval and explanation
 
         Args:
             max_articles (int): Maximum number of PubMed articles to fetch.
-            cache_file (str): File to cache PubMed articles (relative to project root).
+            cache_file (str): File to cache PubMed articles (relative to project root)
+
         """
-        # Load environment variables from the project root (two levels up from scripts/rag/)
+        # Loading environment variables from the project root 
+
         env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), '.env')
         load_dotenv(env_path)
         if not os.getenv("XAI_API_KEY"):
@@ -35,9 +42,11 @@ class RAGSystem:
         logger.info("Environment variables for RAGSystem loaded successfully.")
 
         self.max_articles = max_articles
-        # Store cache file in the project root (two levels up)
+
+        # Storing cache file in the project root 
+
         self.cache_file = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), cache_file)
-        # Explicitly set device to 'cpu' to avoid meta tensor issue
+      
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
         self.documents = self._load_or_fetch_pubmed_articles()
         self.index = self._build_index()
@@ -47,7 +56,8 @@ class RAGSystem:
         Load cached PubMed articles or fetch new ones.
 
         Returns:
-            list: List of article strings (title: abstract).
+            list: List of article strings (title: abstract)
+
         """
         try:
             with open(self.cache_file, 'rb') as f:
@@ -65,7 +75,8 @@ class RAGSystem:
         Fetch PubMed articles using Entrez API.
 
         Returns:
-            list: List of article strings.
+            list: List of article strings
+
         """
         logger.info("Fetching PubMed articles...")
         query = "breast cancer treatment (HER2-positive OR ER-positive OR triple-negative)[Title/Abstract] AND (2020/01/01:2025/12/31[Date - Publication])"
@@ -108,7 +119,8 @@ class RAGSystem:
         Build FAISS index for document retrieval.
 
         Returns:
-            faiss.IndexFlatL2: FAISS index for article embeddings.
+            faiss.IndexFlatL2: FAISS index for article embeddings
+
         """
         logger.info("Building FAISS index...")
         embeddings = self.embedding_model.encode(self.documents)
@@ -119,7 +131,7 @@ class RAGSystem:
 
     def explain(self, patient_data: dict, expected_time: float) -> str:
         """
-        Generate treatment advice using Grok API and PubMed articles.
+        Generate treatment advice using Grok API and PubMed articles
 
         Args:
             patient_data (dict): Patient feature values.
@@ -133,6 +145,7 @@ class RAGSystem:
         embedding = self.embedding_model.encode([query]).astype(np.float32)
         _, indices = self.index.search(embedding, 2)
         context = [self.documents[i] for i in indices[0]]
+        
         prompt = f"""Based on the following articles:\n{chr(10).join(context)}\n\nExplain treatment options and provide advice for this case: {query}"""
         logger.info(f"Calling Grok API with prompt: {prompt[:100]}...")
         url = "https://api.x.ai/v1/chat/completions"
