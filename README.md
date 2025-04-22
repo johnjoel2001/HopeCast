@@ -36,7 +36,7 @@
 | Genetic  | 0.5000         | 0.6513  | **0.6730** |
 | Mutation | 0.5000         | 0.5687  | **0.5611** |
 
-## Try the HopeCast app here:  
+## Try the HopeCast Web App here:  
 
  [https://hopecast-service-1004867270011.us-central1.run.app/](https://hopecast-service-1004867270011.us-central1.run.app/)
 
